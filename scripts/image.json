@@ -1,0 +1,28 @@
+[
+    {
+      "name": "${app_name1}-app-container",
+      "image": "${app_image1}",
+      "cpu": 100, 
+      "memory": 256,
+      "essential": true,
+      "networkMode": "awsvpc",
+      "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-create-group": "true",
+            "awslogs-group": "/ecs/${app_name1}-ecs-log-group",
+            "awslogs-region": "${aws_region1}",
+            "awslogs-stream-prefix": "clixx-ecs"
+          }
+      },
+      "portMappings": [
+        {
+            "name": "${app_name1}-app-container-80-tcp",
+            "containerPort": ${app_port1},
+            "hostPort": ${app_port1},
+            "protocol": "tcp",
+            "appProtocol": "http"            
+        }
+      ]
+    }
+  ]
