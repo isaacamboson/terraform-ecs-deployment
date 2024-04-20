@@ -1,6 +1,6 @@
 data "template_file" "clixx-app" {
   template = file(format("%s/scripts/image.json", path.module))
-  
+
   vars = {
     app_image1  = var.app_image
     app_port1   = var.app_port
@@ -13,7 +13,7 @@ data "template_file" "clixx-app" {
 
 data "template_file" "ecs_user_data" {
   template = file(format("%s/scripts/ecs.sh", path.module))
-  
+
   vars = {
     ecs_cluster_name = aws_ecs_cluster.clixx-cluster.name
   }
