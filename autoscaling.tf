@@ -41,6 +41,7 @@ resource "aws_autoscaling_group" "ecs_autoscaling_group" {
   }
 }
 
+
 #-----------------------------------------------------------------------------
 #creating Launch Template for the autoscaling group instances
 #-----------------------------------------------------------------------------
