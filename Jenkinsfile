@@ -26,7 +26,7 @@ pipeline {
             steps {
                 // sh "terraform plan --auto-approve"
                 slackSend (color: '#FFFF00', message: "STARTED Plan: Job by ${RUNNER} - '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-                sh "terraform plan -out=tfplan -input=false"
+                sh "terraform plan -out=tfplan -input=false -lock=false"
             }
         }
 
@@ -42,9 +42,9 @@ pipeline {
             steps {
                 slackSend (color: '#FFFF00', message: "STARTED Apply: Job by ${RUNNER} - '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
                 script{stage("Performing Terraform ${ACTION}")}
-                sh "terraform ${ACTION} --auto-approve"
+                // sh "terraform ${ACTION} --auto-approve"
                 // sh "terraform apply --auto-approve -input=false tfplan"
-                // sh "terraform ${ACTION} --auto-approve -input=false -lock=false"
+                sh "terraform ${ACTION} --auto-approve -input=false -lock=false"
             }
         }
 
