@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         PATH = "${PATH}:${getTerraformPath()}"
-        ACTION = "destroy"
+        ACTION = "apply"
         RUNNER = "Isaac"
     }
 
@@ -21,12 +21,6 @@ pipeline {
                 sh "terraform init"
              }
          }
-
-        //  stage('terraform force-unlock ac0948c7-f3a6-3835-ae31-788f452ccbfa'){
-        //     steps {
-        //         sh "terraform force-unlock ac0948c7-f3a6-3835-ae31-788f452ccbfa"
-        //     }
-        //  }
 
          stage('terraform plan'){
             steps {
