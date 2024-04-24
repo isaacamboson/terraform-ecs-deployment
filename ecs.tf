@@ -16,8 +16,8 @@ resource "aws_ecs_task_definition" "clixx-def" {
   family                   = "${local.ApplicationPrefix}-app-task-def"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_iam_role.arn
-  # network_mode             = "awsvpc"
-  # requires_compatibilities = ["EC2"]
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["EC2"]
   #   cpu                      = 1024
   #   memory                   = 1024
   container_definitions = data.template_file.clixx-app.rendered
@@ -42,8 +42,8 @@ resource "aws_ecs_service" "clixx-service" {
   deployment_minimum_healthy_percent = 50  #How many percent of a service must be running to still execute a safe deployment
   deployment_maximum_percent         = 100 #How many additional tasks are allowed to run (in percent) while a deployment is executed
 
-  # launch_type         = "EC2"
-  # scheduling_strategy = "REPLICA"
+  launch_type         = "EC2"
+  scheduling_strategy = "REPLICA"
 
   network_configuration {
     security_groups = [aws_security_group.ecs_sg.id]
