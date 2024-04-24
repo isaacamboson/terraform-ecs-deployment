@@ -25,10 +25,10 @@ resource "aws_lb_listener" "clixx-app" {
 }
 
 resource "aws_lb_target_group" "clixx-app-tg" {
-  name     = "${local.ApplicationPrefix}-app-tg"
-  port     = "80"
-  protocol = "HTTP"
-  target_type = "ip"
+  name                 = "${local.ApplicationPrefix}-app-tg"
+  port                 = "80"
+  protocol             = "HTTP"
+  target_type          = "ip"
   vpc_id               = aws_vpc.vpc_main.id
   deregistration_delay = 120
 
