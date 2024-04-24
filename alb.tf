@@ -33,14 +33,14 @@ resource "aws_lb_target_group" "clixx-app-tg" {
   deregistration_delay = 120
 
   health_check {
-    healthy_threshold   = "2"
-    unhealthy_threshold = "2"
-    timeout             = "3"
-    protocol            = "HTTP"
-    matcher             = "200" #HTTP status code matcher for healthcheck
+    # healthy_threshold   = "2"
+    # unhealthy_threshold = "2"
+    # timeout             = "3"
+    # protocol            = "HTTP"
+    # matcher             = "200" #HTTP status code matcher for healthcheck
     path                = "/"   #Endpoint for ALB healthcheck
-    interval            = "15"
-    port                = "traffic-port"
+    # interval            = "15"
+    # port                = "traffic-port"
   }
 
   depends_on = [aws_lb.lb]
