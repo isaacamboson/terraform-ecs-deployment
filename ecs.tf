@@ -38,7 +38,7 @@ resource "aws_ecs_service" "clixx-service" {
   #   iam_role                           = aws_iam_role.ecs_service_role.arn
   cluster                            = aws_ecs_cluster.clixx-cluster.id
   task_definition                    = aws_ecs_task_definition.clixx-def.arn
-  desired_count                      = 2   #How many ECS tasks should run in parallel  #How many percent of a service must be running to still execute a safe deployment
+  desired_count                      = 4   #How many ECS tasks should run in parallel  #How many percent of a service must be running to still execute a safe deployment
   deployment_minimum_healthy_percent = 50  #How many percent of a service must be running to still execute a safe deployment
   deployment_maximum_percent         = 100 #How many additional tasks are allowed to run (in percent) while a deployment is executed
 
@@ -70,10 +70,11 @@ resource "aws_ecs_service" "clixx-service" {
   }
 
   # Do not update desired count again to avoid a reset to this number on every deployment
-  lifecycle {
-    ignore_changes = [desired_count]
-  }
+  # lifecycle {
+  #   ignore_changes = [desired_count]
+  # }
 
   depends_on = [aws_lb_listener.clixx-app, aws_iam_role_policy_attachment.ecs_task_execution_role_policy]
 }
+
 

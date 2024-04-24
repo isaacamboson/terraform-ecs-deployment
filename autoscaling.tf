@@ -3,12 +3,16 @@
 #-----------------------------------------------------------------------------
 
 resource "aws_autoscaling_group" "ecs_autoscaling_group" {
-  name                  = "${local.ApplicationPrefix}_ASG_${var.environment}"
-  max_size              = 4
-  min_size              = 2
-  vpc_zone_identifier   = [aws_subnet.private_subnets[0].id, aws_subnet.private_subnets[1].id]
-  health_check_type     = "EC2"
-  protect_from_scale_in = true
+  name                      = "${local.ApplicationPrefix}_ASG_${var.environment}"
+  desired_capacity          = 4
+  max_size                  = 6
+  min_size                  = 4
+  health_check_grace_period = 300
+  vpc_zone_identifier       = [aws_subnet.private_subnets[0].id, aws_subnet.private_subnets[1].id]
+  health_check_type         = "EC2"
+  target_group_arns         = [aws_lb_target_group.clixx-app-tg.arn]
+  default_cooldown          = 300
+  protect_from_scale_in     = true
 
   enabled_metrics = [
     "GroupMinSize",
@@ -21,6 +25,8 @@ resource "aws_autoscaling_group" "ecs_autoscaling_group" {
     "GroupTotalInstances"
   ]
 
+  metrics_granularity = "1Minute"
+
   launch_template {
     id      = aws_launch_template.clixx-app-launch-temp.id
     version = "$Latest"
@@ -30,17 +36,18 @@ resource "aws_autoscaling_group" "ecs_autoscaling_group" {
     strategy = "Rolling"
   }
 
-  #   lifecycle {
-  #     create_before_destroy = true
-  #   }
+  lifecycle {
+    create_before_destroy = true
+  }
 
   tag {
     key                 = "Name"
     value               = "${local.ApplicationPrefix}_ASG_${var.environment}"
     propagate_at_launch = true
   }
-}
 
+  depends_on = [aws_lb.lb]
+}
 
 #-----------------------------------------------------------------------------
 #creating Launch Template for the autoscaling group instances
@@ -57,6 +64,12 @@ resource "aws_launch_template" "clixx-app-launch-temp" {
   iam_instance_profile {
     arn = aws_iam_instance_profile.ec2_instance_role_profile.arn
   }
+
+  # network_interfaces {
+  #   associate_public_ip_address = true
+  #   delete_on_termination = true
+  #   security_groups = 
+  # }
 
   monitoring {
     enabled = true
@@ -90,6 +103,7 @@ resource "aws_ecs_capacity_provider" "cas" {
   auto_scaling_group_provider {
     auto_scaling_group_arn         = aws_autoscaling_group.ecs_autoscaling_group.arn
     managed_termination_protection = "ENABLED"
+    # managed_termination_protection = "DISABLED"
 
     managed_scaling {
       maximum_scaling_step_size = 5 #Maximum amount of EC2 instances that should be added on scale-out

@@ -15,4 +15,6 @@ resource "aws_instance" "bastion-host" {
     Environment = var.environment
     OwnerEmail  = var.OwnerEmail
   }
+
+  depends_on = [aws_db_instance.clixx_app_db_instance]
 }

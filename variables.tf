@@ -13,7 +13,8 @@ variable "ecs_task_execution_role" {
 }
 
 variable "app_image" {
-  default     = "767398027423.dkr.ecr.us-east-1.amazonaws.com/clixx-repository:clixx-img-1.0"
+  default = "767398027423.dkr.ecr.us-east-1.amazonaws.com/clixx-repository:clixx-img-1.0"
+  # default     = "767398027423.dkr.ecr.us-east-1.amazonaws.com/clixx-repository:latest"
   description = "docker image to run in this ECS cluster"
 }
 

@@ -4,6 +4,12 @@ resource "aws_lb" "lb" {
   name            = "${local.ApplicationPrefix}-load-balancer"
   subnets         = aws_subnet.pub_subnets.*.id
   security_groups = [aws_security_group.lb-sg.id]
+
+  internal                         = false
+  load_balancer_type               = "network"
+  enable_deletion_protection       = false
+  enable_cross_zone_load_balancing = true
+
 }
 
 #redirecting all incoming traffic from LB to the target group
@@ -19,22 +25,25 @@ resource "aws_lb_listener" "clixx-app" {
 }
 
 resource "aws_lb_target_group" "clixx-app-tg" {
-  name        = "${local.ApplicationPrefix}-app-tg"
-  port        = 80
-  protocol    = "HTTP"
-  target_type = "ip"
-  vpc_id      = aws_vpc.vpc_main.id
+  name     = "${local.ApplicationPrefix}-app-tg"
+  port     = "80"
+  protocol = "HTTP"
+  # target_type = "ip"
+  vpc_id               = aws_vpc.vpc_main.id
+  deregistration_delay = 120
 
   health_check {
     healthy_threshold   = "2"
     unhealthy_threshold = "2"
-    timeout             = "30"
+    timeout             = "3"
     protocol            = "HTTP"
     matcher             = "200" #HTTP status code matcher for healthcheck
     path                = "/"   #Endpoint for ALB healthcheck
-    interval            = "60"
+    interval            = "15"
+    port                = "traffic-port"
   }
 
   depends_on = [aws_lb.lb]
 }
+
 
