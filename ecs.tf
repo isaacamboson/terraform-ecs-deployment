@@ -42,8 +42,8 @@ resource "aws_ecs_service" "clixx-service" {
   deployment_minimum_healthy_percent = 50  #How many percent of a service must be running to still execute a safe deployment
   deployment_maximum_percent         = 100 #How many additional tasks are allowed to run (in percent) while a deployment is executed
 
-  launch_type         = "EC2"
-  scheduling_strategy = "REPLICA"
+  # launch_type         = "EC2"
+  # scheduling_strategy = "REPLICA"
 
   network_configuration {
     security_groups = [aws_security_group.ecs_sg.id]
