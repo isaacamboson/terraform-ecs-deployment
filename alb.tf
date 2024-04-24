@@ -7,8 +7,8 @@ resource "aws_lb" "lb" {
 
   # internal                         = false
   # load_balancer_type               = "network"
-  enable_deletion_protection       = false
-  enable_cross_zone_load_balancing = true
+  # enable_deletion_protection       = false
+  # enable_cross_zone_load_balancing = true
 
 }
 
