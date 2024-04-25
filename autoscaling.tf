@@ -59,17 +59,17 @@ resource "aws_launch_template" "clixx-app-launch-temp" {
   instance_type          = var.EC2_Components["instance_type"]
   key_name               = "private-key-kp"
   user_data              = base64encode(data.template_file.ecs_user_data.rendered)
-  # vpc_security_group_ids = [aws_security_group.ecs_sg.id]
+  vpc_security_group_ids = [aws_security_group.ecs_sg.id]
 
   iam_instance_profile {
     arn = aws_iam_instance_profile.ec2_instance_role_profile.arn
   }
 
-  network_interfaces {
-    associate_public_ip_address = true
-    delete_on_termination       = true
-    security_groups             = [aws_security_group.ecs_sg.id]
-  }
+  # network_interfaces {
+  #   associate_public_ip_address = true
+  #   delete_on_termination       = true
+  #   security_groups             = [aws_security_group.ecs_sg.id]
+  # }
 
   monitoring {
     enabled = true
