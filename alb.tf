@@ -30,7 +30,7 @@ resource "aws_lb_target_group" "clixx-app-tg" {
   protocol             = "HTTP"
   # target_type          = "ip"
   vpc_id               = aws_vpc.vpc_main.id
-  deregistration_delay = 120
+  # deregistration_delay = 120
 
   health_check {
     healthy_threshold   = "2"
@@ -40,7 +40,7 @@ resource "aws_lb_target_group" "clixx-app-tg" {
     matcher             = "200" #HTTP status code matcher for healthcheck
     path                = "/"   #Endpoint for ALB healthcheck
     interval            = "15"
-    port                = "traffic-port"
+    # port                = "traffic-port"
   }
 
   depends_on = [aws_lb.lb]
