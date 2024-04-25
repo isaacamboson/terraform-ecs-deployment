@@ -30,8 +30,7 @@ resource "aws_lb_target_group" "clixx-app-tg" {
   protocol        = "HTTP"
   target_type     = "ip"
   vpc_id          = aws_vpc.vpc_main.id
-  ip_address_type = "ipv4"
-  # deregistration_delay = 120
+  deregistration_delay = 120
 
   health_check {
     healthy_threshold   = "2"
