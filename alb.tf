@@ -5,8 +5,8 @@ resource "aws_lb" "lb" {
   subnets         = aws_subnet.pub_subnets.*.id
   security_groups = [aws_security_group.lb-sg.id]
 
-  internal                         = false
-  load_balancer_type               = "application"
+  internal           = false
+  load_balancer_type = "application"
   # enable_deletion_protection       = false
   enable_cross_zone_load_balancing = true
 
@@ -25,11 +25,12 @@ resource "aws_lb_listener" "clixx-app" {
 }
 
 resource "aws_lb_target_group" "clixx-app-tg" {
-  name                 = "${local.ApplicationPrefix}-app-tg"
-  port                 = "80"
-  protocol             = "HTTP"
-  # target_type          = "ip"
-  vpc_id               = aws_vpc.vpc_main.id
+  name            = "${local.ApplicationPrefix}-app-tg"
+  port            = "80"
+  protocol        = "HTTP"
+  target_type     = "ip"
+  vpc_id          = aws_vpc.vpc_main.id
+  ip_address_type = "ipv4"
   # deregistration_delay = 120
 
   health_check {

@@ -65,11 +65,11 @@ resource "aws_launch_template" "clixx-app-launch-temp" {
     arn = aws_iam_instance_profile.ec2_instance_role_profile.arn
   }
 
-  # network_interfaces {
-  #   associate_public_ip_address = true
-  #   delete_on_termination = true
-  #   security_groups = 
-  # }
+  network_interfaces {
+    associate_public_ip_address = true
+    delete_on_termination       = true
+    security_groups             = [aws_security_group.ecs_sg.id]
+  }
 
   monitoring {
     enabled = true
