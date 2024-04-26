@@ -25,7 +25,6 @@ resource "aws_subnet" "private_subnets" {
   vpc_id            = aws_vpc.vpc_main.id
   cidr_block        = var.private_subnet_cidrs[count.index]
   availability_zone = element(var.availability_zone, count.index)
-  #   availability_zone = var.availability_zone[count.index]
 
   tags = {
     Name = "${local.PrivatePrefix}_Subnet_${count.index}"
@@ -83,8 +82,7 @@ resource "aws_route_table" "private_custom_route_table" {
 
 # associating route tables with the private subnets
 resource "aws_route_table_association" "rt_association_private_subnets" {
-  count = length(var.private_subnet_cidrs)
-  #   count          = length(var.availability_zone)
+  count          = length(var.private_subnet_cidrs)
   subnet_id      = element(aws_subnet.private_subnets.*.id, count.index)
   route_table_id = element(aws_route_table.private_custom_route_table.*.id, count.index)
 }

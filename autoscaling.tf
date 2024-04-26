@@ -3,12 +3,16 @@
 #-----------------------------------------------------------------------------
 
 resource "aws_autoscaling_group" "ecs_autoscaling_group" {
-  name                  = "${local.ApplicationPrefix}_ASG_${var.environment}"
-  max_size              = 4
-  min_size              = 2
-  vpc_zone_identifier   = [aws_subnet.private_subnets[0].id, aws_subnet.private_subnets[1].id]
-  health_check_type     = "EC2"
-  protect_from_scale_in = true
+  name                      = "${local.ApplicationPrefix}_ASG_${var.environment}"
+  desired_capacity          = 4
+  max_size                  = 6
+  min_size                  = 4
+  health_check_grace_period = 300
+  vpc_zone_identifier       = [aws_subnet.private_subnets[0].id, aws_subnet.private_subnets[1].id]
+  health_check_type         = "EC2"
+  target_group_arns         = [aws_lb_target_group.clixx-app-tg.arn]
+  default_cooldown          = 300
+  protect_from_scale_in     = true
 
   enabled_metrics = [
     "GroupMinSize",
@@ -21,6 +25,8 @@ resource "aws_autoscaling_group" "ecs_autoscaling_group" {
     "GroupTotalInstances"
   ]
 
+  metrics_granularity = "1Minute"
+
   launch_template {
     id      = aws_launch_template.clixx-app-launch-temp.id
     version = "$Latest"
@@ -30,15 +36,17 @@ resource "aws_autoscaling_group" "ecs_autoscaling_group" {
     strategy = "Rolling"
   }
 
-  #   lifecycle {
-  #     create_before_destroy = true
-  #   }
+  lifecycle {
+    create_before_destroy = true
+  }
 
   tag {
     key                 = "Name"
     value               = "${local.ApplicationPrefix}_ASG_${var.environment}"
     propagate_at_launch = true
   }
+
+  depends_on = [aws_lb.lb]
 }
 
 #-----------------------------------------------------------------------------
@@ -78,6 +86,7 @@ resource "aws_launch_template" "clixx-app-launch-temp" {
     Name = "${local.ApplicationPrefix}_Instance"
   }
 }
+
 
 #-----------------------------------------------------------------------------
 ## Creates Capacity Provider linked with ASG and ECS Cluster
@@ -148,3 +157,4 @@ resource "aws_appautoscaling_policy" "ecs_memory_policy" {
     }
   }
 }
+
