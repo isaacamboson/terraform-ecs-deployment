@@ -2,14 +2,10 @@ locals {
   PublicPrefix      = "Public"
   PrivatePrefix     = "Private"
   ApplicationPrefix = "clixx"
-  #   BlogPrefix        = "blog"
-  #   ServerPrefix      = ""
-  #   AZ_A = "AZ_A"
-  #   AZ_B = "AZ_B"
+  
   db_creds = jsondecode(
     data.aws_secretsmanager_secret_version.creds.secret_string
   )
-
 }
 
 # route53 for clixx application

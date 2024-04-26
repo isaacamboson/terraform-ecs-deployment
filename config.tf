@@ -12,7 +12,7 @@ data "template_file" "clixx-app" {
 }
 
 data "template_file" "ecs_user_data" {
-  template = file(format("%s/scripts/ecs.sh", path.module))
+  template = file(format("%s/scripts/ecs.tpl", path.module))
 
   vars = {
     ecs_cluster_name = aws_ecs_cluster.clixx-cluster.name

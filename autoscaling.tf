@@ -65,12 +65,6 @@ resource "aws_launch_template" "clixx-app-launch-temp" {
     arn = aws_iam_instance_profile.ec2_instance_role_profile.arn
   }
 
-  # network_interfaces {
-  #   associate_public_ip_address = true
-  #   delete_on_termination       = true
-  #   security_groups             = [aws_security_group.ecs_sg.id]
-  # }
-
   monitoring {
     enabled = true
   }
@@ -93,6 +87,7 @@ resource "aws_launch_template" "clixx-app-launch-temp" {
   }
 }
 
+
 #-----------------------------------------------------------------------------
 ## Creates Capacity Provider linked with ASG and ECS Cluster
 #-----------------------------------------------------------------------------
@@ -103,7 +98,6 @@ resource "aws_ecs_capacity_provider" "cas" {
   auto_scaling_group_provider {
     auto_scaling_group_arn         = aws_autoscaling_group.ecs_autoscaling_group.arn
     managed_termination_protection = "ENABLED"
-    # managed_termination_protection = "DISABLED"
 
     managed_scaling {
       maximum_scaling_step_size = 5 #Maximum amount of EC2 instances that should be added on scale-out
@@ -163,3 +157,4 @@ resource "aws_appautoscaling_policy" "ecs_memory_policy" {
     }
   }
 }
+
