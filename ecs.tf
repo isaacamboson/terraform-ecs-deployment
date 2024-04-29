@@ -69,7 +69,7 @@ resource "aws_ecs_service" "clixx-service" {
   #   ignore_changes = [desired_count]
   # }
 
-  depends_on = [aws_lb_listener.clixx-app, aws_iam_role_policy_attachment.ecs_task_execution_role_policy]
+  # depends_on = [aws_lb_listener.clixx-app, aws_iam_role_policy_attachment.ecs_task_execution_role_policy]
 }
 
 
