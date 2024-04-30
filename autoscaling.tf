@@ -36,9 +36,9 @@ resource "aws_autoscaling_group" "ecs_autoscaling_group" {
     strategy = "Rolling"
   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
+  # lifecycle {
+  #   create_before_destroy = true
+  # }
 
   tag {
     key                 = "Name"
