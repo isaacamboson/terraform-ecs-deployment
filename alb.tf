@@ -45,4 +45,42 @@ resource "aws_lb_target_group" "clixx-app-tg" {
   depends_on = [aws_lb.lb]
 }
 
+# LB Security Group: Edit to restrict access to the application
+resource "aws_security_group" "lb-sg" {
+  name        = "${local.ApplicationPrefix}-lb-security-group"
+  description = "controls access to the LB"
+  vpc_id      = aws_vpc.vpc_main.id
 
+  ingress {
+    protocol    = "tcp"
+    from_port   = var.app_port
+    to_port     = var.app_port
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 443
+    to_port     = 443
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 22
+    to_port     = 22
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all egress traffic"
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${local.ApplicationPrefix}-alb-sg"
+  }
+}
