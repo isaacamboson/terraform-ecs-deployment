@@ -16,10 +16,7 @@ resource "aws_ecs_task_definition" "clixx-def" {
   family             = "${local.ApplicationPrefix}-app-task-def"
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn      = aws_iam_role.ecs_task_iam_role.arn
-  # network_mode             = "awsvpc"
   requires_compatibilities = ["EC2"]
-  #   cpu                      = 1024
-  #   memory                   = 1024
   container_definitions = data.template_file.clixx-app.rendered
 
   runtime_platform {
@@ -41,9 +38,6 @@ resource "aws_ecs_service" "clixx-service" {
   desired_count                      = 4   #How many ECS tasks should run in parallel  #How many percent of a service must be running to still execute a safe deployment
   deployment_minimum_healthy_percent = 50  #How many percent of a service must be running to still execute a safe deployment
   deployment_maximum_percent         = 100 #How many additional tasks are allowed to run (in percent) while a deployment is executed
-
-  # launch_type         = "EC2"
-  # scheduling_strategy = "REPLICA"
 
   load_balancer {
     target_group_arn = aws_lb_target_group.clixx-app-tg.arn
@@ -72,4 +66,50 @@ resource "aws_ecs_service" "clixx-service" {
   # depends_on = [aws_lb_listener.clixx-app, aws_iam_role_policy_attachment.ecs_task_execution_role_policy]
 }
 
+#############################################################################################
+# this security group for ecs - Traffic to the ECS cluster should only come from the LB
+resource "aws_security_group" "ecs_sg" {
+  name        = "ecs-tasks-security-group"
+  description = "allow inbound access from the LB only for EC2 in cluster"
+  vpc_id      = aws_vpc.vpc_main.id
 
+  ingress {
+    description     = "Allow ingress traffic from ALB on HTTP port 80"
+    protocol        = "tcp"
+    from_port       = var.app_port
+    to_port         = var.app_port
+    security_groups = [aws_security_group.lb-sg.id, aws_security_group.bastion-sg.id]
+  }
+
+  ingress {
+    description     = "Allow ingress traffic from ALB on HTTP on ephemeral ports"
+    protocol        = "tcp"
+    from_port       = 1024
+    to_port         = 65535
+    security_groups = [aws_security_group.lb-sg.id, aws_security_group.bastion-sg.id]
+  }
+
+  ingress {
+    description     = "Allow SSH ingress traffic from bastion host"
+    protocol        = "tcp"
+    from_port       = 22
+    to_port         = 22
+    security_groups = [aws_security_group.lb-sg.id, aws_security_group.bastion-sg.id]
+  }
+
+  ingress {
+    description     = "Allow icmp ingress traffic from bastion host"
+    protocol        = "icmp"
+    from_port       = -1
+    to_port         = -1
+    security_groups = [aws_security_group.lb-sg.id, aws_security_group.bastion-sg.id]
+  }
+
+  egress {
+    description = "Allow all egress traffic"
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}

@@ -3,7 +3,7 @@ resource "aws_vpc" "vpc_main" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   tags = {
-    Name = "ECS_VPC"
+    Name = "ECS_${local.ApplicationPrefix}_VPC"
   }
 }
 
@@ -36,7 +36,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc_main.id
 
   tags = {
-    Name = "VPC_IGW"
+    Name = "${local.PrivatePrefix}_VPC_IGW"
   }
 }
 

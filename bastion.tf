@@ -18,3 +18,34 @@ resource "aws_instance" "bastion-host" {
 
   depends_on = [aws_db_instance.clixx_app_db_instance]
 }
+
+#creating security group for bastion - this allows traffic from 0.0.0.0/0
+resource "aws_security_group" "bastion-sg" {
+  name        = "bastion-sg"
+  description = "Bastion host Security Group"
+  vpc_id      = aws_vpc.vpc_main.id
+
+  ingress {
+    description = "Allow SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] ## The IP range could be limited to the developers IP addresses if they are fix
+  }
+
+  ingress {
+    description = "Allow ICMP"
+    from_port   = -1
+    to_port     = -1
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"] ## The IP range could be limited to the developers IP addresses if they are fix
+  }
+
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
