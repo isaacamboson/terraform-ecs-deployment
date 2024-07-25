@@ -94,7 +94,7 @@ variable "EC2_Components" {
     volume_size           = 30
     delete_on_termination = true
     encrypted             = "true"
-    instance_type         = "t2.micro"
+    instance_type         = "t2.medium"
   }
 }
 

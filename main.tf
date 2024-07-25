@@ -3,6 +3,8 @@ locals {
   PrivatePrefix     = "Private"
   ApplicationPrefix = "clixx"
 
+  inbound_ports     = [80, 443, 8080, 22]
+
   db_creds = jsondecode(
     data.aws_secretsmanager_secret_version.creds.secret_string
   )
