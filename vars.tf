@@ -84,7 +84,7 @@ variable "vpc_cidr" {
 
 variable "project_name" {
   type    = string
-  default = "caleb"
+  default = "manga1"
 }
 
 variable "availability_zone" {
