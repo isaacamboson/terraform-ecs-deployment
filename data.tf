@@ -10,8 +10,12 @@ data "aws_ami" "stack_ami" {
 }
 
 data "aws_ami" "ecs-optimized" {
-  owners      = ["679593333241"]
-  name_regex  = "^Amazon ECS-Optimized Amazon Linux 2 AMI*"
+  # owners      = ["679593333241"]
+  # name_regex  = "^Amazon ECS-Optimized Amazon Linux 2 AMI*"
+  # most_recent = true
+
+  owners = ["767397882686"]
+  name_regex = "^ami-stack-activiti-ecs-1.0*"
   most_recent = true
 
   filter {
