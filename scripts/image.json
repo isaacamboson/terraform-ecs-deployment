@@ -12,7 +12,7 @@
             "awslogs-create-group": "true",
             "awslogs-group": "/ecs/${app_name1}-ecs-log-group",
             "awslogs-region": "${aws_region1}",
-            "awslogs-stream-prefix": "clixx-ecs"
+            "awslogs-stream-prefix": "${app_name1}-ecs"
           }
       },
       "portMappings": [
